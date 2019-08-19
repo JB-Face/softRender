@@ -1,7 +1,5 @@
-//#include "math.h"
-//#include "graph.h"
-//#include "Canvas.h"
-#include "Vector2.h"
+
+#include "math.h"
 #include "Color.h"
 #include "Canvas.h"
 #include "Line2d.h"
