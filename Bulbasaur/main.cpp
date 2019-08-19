@@ -34,7 +34,7 @@ int main(int argc, char* args[])
 
 	Quaternion a = Quaternion::identity;
 	
-	a.debug();//change
+	a.debug();//chang
 	
 	return 0;
 
