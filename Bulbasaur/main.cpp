@@ -41,6 +41,9 @@ int main(int argc, char* args[])
 
 	Quaternion a = Quaternion(4, 4, 4, 4);
 	a.debug();
+
+
+	a.GetRotMatrix().debug();
 	//a.debug();
 
 	
