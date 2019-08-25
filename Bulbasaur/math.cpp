@@ -242,7 +242,18 @@ Quaternion::~Quaternion()
 
 Matrix4x4 Quaternion::GetRotMatrix()
 {
-	return Matrix4x4(1);
+	const float n = 1.0f / sqrt(x * x + y * y + z * z + w * w);
+	x *= n;
+	y *= n;
+	z *= n;
+	w *= n;
+
+	return Matrix4x4(
+		1.0f - 2.0f * y * y - 2.0f * z * z, 2.0f * x * y - 2.0f * z * w, 2.0f * x * z + 2.0f * y * w, 0.0f,
+		2.0f * x * y + 2.0f * z * w, 1.0f - 2.0f * x * x - 2.0f * z * z, 2.0f * y * z - 2.0f * x * w, 0.0f,
+		2.0f * x * z - 2.0f * y * w, 2.0f * y * z + 2.0f * x * w, 1.0f - 2.0f * x * x - 2.0f * y * y, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	).transpose();
 }
 
 void Quaternion::debug()

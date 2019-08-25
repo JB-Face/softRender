@@ -169,7 +169,7 @@ public:
 
 	//var:
 	 //Quaternion identity = Quaternion(0,0,0,1);//TODO
-	static Matrix4x4 GetRotMatrix();
+	Matrix4x4 GetRotMatrix();
 
 	//function
 
