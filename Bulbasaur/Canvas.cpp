@@ -4,6 +4,9 @@
 #include "Canvas.h"
 #include "Line2d.h"
 
+
+
+
 void Canvas::DrawPixel(int x, int y, Color c)
 {
 	PixelData[x + y * width] = c.toUint32();

@@ -6,7 +6,10 @@
 #include "Canvas.h"
 #include "MathUtility.h"
 #include "math.h"
-#define qDebug MessageLogger(__FILE__, __FUNCTION__, __LINE__).debug
+
+
+
+#include "test_class.h"
 const int WINDOW_WIDTH = 1024;
 const int WINDOW_HEIGHT = 640;
 
@@ -32,9 +35,16 @@ int main(int argc, char* args[])
 {
 	//graphTest();
 
-	Quaternion a = Quaternion::identity;
+	//Quaternion a = Quaternion::identity;
 	
-	a.debug();//chang
+	//a.debug();//chang
+
+	Quaternion a = Quaternion(4, 4, 4, 4);
+	a.debug();
+	//a.debug();
+
+	
+
 	
 	return 0;
 
