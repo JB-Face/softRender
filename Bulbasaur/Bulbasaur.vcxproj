@@ -140,7 +140,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="math.cpp" />
     <ClCompile Include="Quaternion.cpp" />
-    <ClCompile Include="test_class.cpp" />
     <ClCompile Include="VSOutput.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -36,9 +36,6 @@
     <ClCompile Include="Quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="math.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
