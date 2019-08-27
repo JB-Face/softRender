@@ -215,30 +215,22 @@ Quaternion::Quaternion()
 {
 	Quaternion(0, 0, 0, 1);
 }
-
 Quaternion::Quaternion(float _x, float _y, float _z, float _w)
 {
 	x = _x;
 	y = _y;
 	z = _z;
 	w = _w;
-	Quaternion::setEulerAngle(x, y, z, w);
+	eulerAngles = Quaternion::EulerAngle();
 }
-
 Quaternion::Quaternion(float _yaw, float _pitch, float _roll)
 {
-	yaw = _yaw;
-	pitch = _pitch;
-	roll = _roll;
-	Quaternion::setQuaternion(yaw, pitch, roll);
+	
+	this->setQuaternion(_yaw,_pitch,_roll);
 }
-
-
-
 Quaternion::~Quaternion()
 {
 }
-
 Matrix4x4 Quaternion::GetRotMatrix()
 {
 	const float n = 1.0f / sqrt(x * x + y * y + z * z + w * w);
@@ -254,26 +246,24 @@ Matrix4x4 Quaternion::GetRotMatrix()
 		0.0f, 0.0f, 0.0f, 1.0f
 	).transpose();
 }
-
 void Quaternion::debug()
 {
+	eulerAngles.debug();
 	std::cout << x << "," << y << "," << z << "," << w << std::endl;
-	std::cout << yaw << "," << pitch << "," << roll << std::endl;
 }
-
-void Quaternion::setQuaternion(float yaw, float pitch, float rolll) {
+void Quaternion::setQuaternion(float _yaw, float _pitch, float _rolll) {
 	float  angle;
 	float  sinRoll, sinPitch, sinYaw, cosRoll, cosPitch, cosYaw;
 
-	angle = yaw * 0.5f;
+	angle = _yaw * 0.5f;
 	sinYaw = sin(angle);
 	cosYaw = cos(angle);
 
-	angle = pitch * 0.5f;
+	angle = _pitch * 0.5f;
 	sinPitch = sin(angle);
 	cosPitch = cos(angle);
 
-	angle = roll * 0.5f;
+	angle = _rolll * 0.5f;
 	sinRoll = sin(angle);
 	cosRoll = cos(angle);
 
@@ -287,26 +277,22 @@ void Quaternion::setQuaternion(float yaw, float pitch, float rolll) {
 	y = _y / mag;
 	z = _z / mag;
 	w = _w / mag;
+
 }
-
-
 void Quaternion::setEulerAngle(float x, float y, float z, float w) {
-	yaw = atan2(2 * (w * x + z * y), 1 - 2 * (x * x + y * y));
-	pitch = asin(Clamp(2 * (w * y - x * z), -1.0f, 1.0f));
-	roll = atan2(2 * (w * z + x * y), 1 - 2 * (z * z + y * y));
+	float yaw = atan2(2 * (w * x + z * y), 1 - 2 * (x * x + y * y));
+	float pitch = asin(Clamp(2 * (w * y - x * z), -1.0f, 1.0f));
+	float roll = atan2(2 * (w * z + x * y), 1 - 2 * (z * z + y * y));
 
 	yaw *= Rad2Deg;
 	pitch *= Rad2Deg;
 	roll *= Rad2Deg;
 
-
 }
-
 float Quaternion::Dot(const Quaternion& lhs, Quaternion& rhs)
 {
 	return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 }
-
 Quaternion Quaternion::Lerp(const Quaternion& lhs, Quaternion& rhs, float f)
 {
 	return Quaternion((1 - f) * lhs.x + f * rhs.x,
@@ -314,41 +300,33 @@ Quaternion Quaternion::Lerp(const Quaternion& lhs, Quaternion& rhs, float f)
 		(1 - f) * lhs.z + f * rhs.z,
 		(1 - f) * lhs.w + f * rhs.w);
 }
-
 Quaternion Quaternion::slerp(const Quaternion& lhs, Quaternion& rhs, float f)
 {
 	return Quaternion();
 }
-
-//Matrix4x4 Quaternion::GetRotMatrix() const
-//{
-//	return Matrix4x4(10);
-//}
-
-
-
-
-
 Quaternion Quaternion::Inverse() const
 {
 	return Quaternion(-x, -y, -z, -w);
 }
+Vector3 Quaternion::EulerAngle() const
+{
+	float yaw = atan2(2 * (w * x + z * y), 1 - 2 * (x * x + y * y));
+	float pitch = asin(Clamp(2 * (w * y - x * z), -1.0f, 1.0f));
+	float roll = atan2(2 * (w * z + x * y), 1 - 2 * (z * z + y * y));
+	return Vector3(Rad2Deg * yaw, Rad2Deg * pitch, Rad2Deg * roll);
+}
+Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
+{
+	float w1 = lhs.w;
+	float w2 = rhs.w;
+	Vector3 v1(lhs.x, lhs.y, lhs.z);
+	Vector3 v2(rhs.x, rhs.y, rhs.z);
+	float w3 = w1 * w2 - Dot(v1, v2);
+	Vector3 v3 = Cross(v1, v2) + w1 * v2 + w2 * v1;
+	return Quaternion(v3.x, v3.y, v3.z, w3);
+}
+Quaternion Quaternion::identity(0, 0, 0, 1);
 
-
-//Matrix4x4 Quaternion::GetRotMatrix() {
-//	const float n = 1.0f / sqrt(x * x + y * y + z * z + w * w);
-//	x *= n;
-//	y *= n;
-//	z *= n;
-//	w *= n;
-//
-//	return Matrix4x4(
-//		1.0f - 2.0f * y * y - 2.0f * z * z, 2.0f * x * y - 2.0f * z * w, 2.0f * x * z + 2.0f * y * w, 0.0f,
-//		2.0f * x * y + 2.0f * z * w, 1.0f - 2.0f * x * x - 2.0f * z * z, 2.0f * y * z - 2.0f * x * w, 0.0f,
-//		2.0f * x * z - 2.0f * y * w, 2.0f * y * z + 2.0f * x * w, 1.0f - 2.0f * x * x - 2.0f * y * y, 0.0f,
-//		0.0f, 0.0f, 0.0f, 1.0f
-//	).transpose();
-//}
 
 Vector3::Vector3()
 {
@@ -371,6 +349,11 @@ Vector3::~Vector3()
 {
 }
 
+void Vector3::debug()
+{
+	std::cout << "(" << x << "," << y << "," << z << ")" << std::endl;
+}
+
 Vector3 Vector3::one(1, 1, 1);
 
 Vector3 operator*(double lhs, const Vector3& rhs)
@@ -378,16 +361,13 @@ Vector3 operator*(double lhs, const Vector3& rhs)
 	return Vector3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z);
 }
 
-Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
-{
-	float w1 = lhs.w;
-	float w2 = rhs.w;
-	Vector3 v1(lhs.x, lhs.y, lhs.z);
-	Vector3 v2(rhs.x, rhs.y, rhs.z);
-	float w3 = w1 * w2 - Dot(v1, v2);
-	Vector3 v3 = Cross(v1, v2) + w1 * v2 + w2 * v1;
-	return Quaternion(v3.x, v3.y, v3.z, w3);
-}
+
+
+
+
+
+
+
 
 Transform::Transform()
 {

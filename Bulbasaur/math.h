@@ -39,6 +39,8 @@ public:
 
 	~Vector3();
 
+	void debug();
+
 
 	//
 
@@ -163,7 +165,8 @@ class Quaternion
 {
 public:
 	float x, y, z, w;
-	 float yaw, pitch, roll;
+	
+	 static Quaternion identity;
 	//Constructor:
 	Quaternion();
 	Quaternion(float x, float y, float z, float w);
@@ -228,7 +231,10 @@ public:
 
 
 	Quaternion Inverse() const;
+	Vector3 EulerAngle() const;
 
+private:
+	Vector3 eulerAngles;
 
 };
 
