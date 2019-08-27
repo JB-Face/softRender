@@ -38,15 +38,16 @@ int main(int argc, char* args[])
 	
 	//a.debug();//chang
 
-	Quaternion a = Quaternion(4, 4, 4, 4);
-	a.debug();
-
-
-	a.GetRotMatrix().debug();
+	
 	//a.debug();
 
-	
+	Transform transform =Transform();
+	Quaternion qtest = Quaternion();
+	transform.position = Vector3(1, 2, 3);
+	transform.rotation =qtest.Euler(30,45,60);
+	transform.scale = Vector3(3, 2, 1);
 
+	qtest.Euler(30, 45, 60).debug();
 	
 	return 0;
 

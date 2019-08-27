@@ -174,6 +174,16 @@ float Matrix4x4::operator[](int index) const
 	return m[index];
 }
 
+inline Matrix4x4 Matrix4x4::operator*(const Matrix4x4& n) const
+{
+	return Matrix4x4(m[0] * n[0] + m[4] * n[1] + m[8] * n[2] + m[12] * n[3], m[1] * n[0] + m[5] * n[1] + m[9] * n[2] + m[13] * n[3], m[2] * n[0] + m[6] * n[1] + m[10] * n[2] + m[14] * n[3], m[3] * n[0] + m[7] * n[1] + m[11] * n[2] + m[15] * n[3],
+		m[0] * n[4] + m[4] * n[5] + m[8] * n[6] + m[12] * n[7], m[1] * n[4] + m[5] * n[5] + m[9] * n[6] + m[13] * n[7], m[2] * n[4] + m[6] * n[5] + m[10] * n[6] + m[14] * n[7], m[3] * n[4] + m[7] * n[5] + m[11] * n[6] + m[15] * n[7],
+		m[0] * n[8] + m[4] * n[9] + m[8] * n[10] + m[12] * n[11], m[1] * n[8] + m[5] * n[9] + m[9] * n[10] + m[13] * n[11], m[2] * n[8] + m[6] * n[9] + m[10] * n[10] + m[14] * n[11], m[3] * n[8] + m[7] * n[9] + m[11] * n[10] + m[15] * n[11],
+		m[0] * n[12] + m[4] * n[13] + m[8] * n[14] + m[12] * n[15], m[1] * n[12] + m[5] * n[13] + m[9] * n[14] + m[13] * n[15], m[2] * n[12] + m[6] * n[13] + m[10] * n[14] + m[14] * n[15], m[3] * n[12] + m[7] * n[13] + m[11] * n[14] + m[15] * n[15]);
+}
+
+
+
 Matrix4x4& Matrix4x4::transpose()
 {
 	std::swap(m[1], m[4]);
@@ -186,25 +196,14 @@ Matrix4x4& Matrix4x4::transpose()
 	return *this;
 }
 
-inline Matrix4x4 Matrix4x4::operator*(const Matrix4x4& n) const
-{
-	return Matrix4x4(m[0] * n[0] + m[4] * n[1] + m[8] * n[2] + m[12] * n[3], m[1] * n[0] + m[5] * n[1] + m[9] * n[2] + m[13] * n[3], m[2] * n[0] + m[6] * n[1] + m[10] * n[2] + m[14] * n[3], m[3] * n[0] + m[7] * n[1] + m[11] * n[2] + m[15] * n[3],
-		m[0] * n[4] + m[4] * n[5] + m[8] * n[6] + m[12] * n[7], m[1] * n[4] + m[5] * n[5] + m[9] * n[6] + m[13] * n[7], m[2] * n[4] + m[6] * n[5] + m[10] * n[6] + m[14] * n[7], m[3] * n[4] + m[7] * n[5] + m[11] * n[6] + m[15] * n[7],
-		m[0] * n[8] + m[4] * n[9] + m[8] * n[10] + m[12] * n[11], m[1] * n[8] + m[5] * n[9] + m[9] * n[10] + m[13] * n[11], m[2] * n[8] + m[6] * n[9] + m[10] * n[10] + m[14] * n[11], m[3] * n[8] + m[7] * n[9] + m[11] * n[10] + m[15] * n[11],
-		m[0] * n[12] + m[4] * n[13] + m[8] * n[14] + m[12] * n[15], m[1] * n[12] + m[5] * n[13] + m[9] * n[14] + m[13] * n[15], m[2] * n[12] + m[6] * n[13] + m[10] * n[14] + m[14] * n[15], m[3] * n[12] + m[7] * n[13] + m[11] * n[14] + m[15] * n[15]);
-}
-
-void Matrix4x4::debug()
-{
-	for (int i = 0; i < 15; i++)
-	{
-		std::cout << m[i];
-	}
-}
-
 Matrix4x4::~Matrix4x4()
 {
 }
+
+
+
+
+
 
 
 #include "Quaternion.h"
@@ -363,6 +362,11 @@ Vector3::Vector3(float _x, float _y, float _z)
 	z = _z;
 }
 
+Vector3 Vector3::operator+(const Vector3& v) const
+{
+	return Vector3(x + v.x, y + v.y, z + v.z);
+}
+
 Vector3::~Vector3()
 {
 }
@@ -372,4 +376,82 @@ Vector3 Vector3::one(1, 1, 1);
 Vector3 operator*(double lhs, const Vector3& rhs)
 {
 	return Vector3(lhs * rhs.x, lhs * rhs.y, lhs * rhs.z);
+}
+
+Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
+{
+	float w1 = lhs.w;
+	float w2 = rhs.w;
+	Vector3 v1(lhs.x, lhs.y, lhs.z);
+	Vector3 v2(rhs.x, rhs.y, rhs.z);
+	float w3 = w1 * w2 - Dot(v1, v2);
+	Vector3 v3 = Cross(v1, v2) + w1 * v2 + w2 * v1;
+	return Quaternion(v3.x, v3.y, v3.z, w3);
+}
+
+Transform::Transform()
+{
+}
+
+Transform::Transform(const Vector3& _position, const Quaternion& _rotation, const Vector3& _scale)
+{
+	position = _position;
+	rotation = _rotation;
+	scale = _scale;
+	isDirty = true;
+
+}
+
+Transform::~Transform()
+{
+}
+
+
+
+
+
+Matrix4x4 Transform::GetLocalToWorldMatrix()
+{
+	if (isDirty)
+	{
+		Matrix4x4 transformMatrix(1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			position.x, position.y, position.z, 1.0f);
+
+
+		Matrix4x4 scaleMatrix(scale.x, 0.0f, 0.0f, 0.0f,
+			0.0f, scale.y, 0.0f, 0.0f,
+			0.0f, 0.0f, scale.z, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
+
+		localToWorldMatrix = localToWorldMatrix = transformMatrix * rotation.GetRotMatrix() * scaleMatrix;
+	}
+
+		
+
+	return localToWorldMatrix;
+
+
+
+}
+
+void Transform::Translate(const Vector3& delta)
+{
+	position.x += delta.x;
+	position.y += delta.y;
+	position.z += delta.z;
+	isDirty = true;
+}
+
+void Transform::Rotate(float xRot, float yRot, float zRot)
+{
+	rotation = rotation * Quaternion::Euler(xRot, yRot, zRot);
+	isDirty = true;
+}
+
+void Transform::Scale(const Vector3& _scale)
+{
+	scale = _scale;
+	isDirty = true;
 }

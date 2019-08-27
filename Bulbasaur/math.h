@@ -138,18 +138,23 @@ public:
 
 	float operator[](int index) const;
 
-
+	inline Matrix4x4 operator*(const Matrix4x4& n) const;
 
 	Matrix4x4& transpose();
 
 
-	inline Matrix4x4 operator*(const Matrix4x4& n)const;
-
-	void debug();
+	void debug()
+	{
+		for (int i = 0; i < 15; i++)
+		{
+			std::cout << m[i];
+		}
+	}
 
 
 
 	~Matrix4x4();
+
 
 
 };
@@ -158,12 +163,50 @@ class Quaternion
 {
 public:
 	float x, y, z, w;
-	float yaw, pitch, roll;
+	 float yaw, pitch, roll;
 	//Constructor:
 	Quaternion();
 	Quaternion(float x, float y, float z, float w);
 	Quaternion(float yaw, float pitch, float roll);
 
+	static Quaternion Euler(float x, float y, float z) {
+
+		
+
+		x *= Deg2Rad;
+		y *= Deg2Rad;
+		z *= Deg2Rad;
+
+		float  angle;
+		float  sinRoll, sinPitch, sinYaw, cosRoll, cosPitch, cosYaw;
+
+		angle = x * 0.5f;
+		sinYaw = sin(angle);
+		cosYaw = cos(angle);
+
+		angle = y * 0.5f;
+		sinPitch = sin(angle);
+		cosPitch = cos(angle);
+
+		angle = z * 0.5f;
+		sinRoll = sin(angle);
+		cosRoll = cos(angle);
+
+		float _x = cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw;
+		float _y = cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw;
+		float _z = sinRoll * cosPitch * cosYaw - cosRoll * sinPitch * sinYaw;
+		float _w = cosRoll * cosPitch * cosYaw + sinRoll * sinPitch * sinYaw;
+
+		float invMag = 1.0f / (_x * _x + _y * _y + _z * _z + _w * _w);
+
+		return Quaternion(_x * invMag, _y * invMag, _z * invMag, _w * invMag);
+	}
+
+
+
+
+	friend Quaternion operator* (const Quaternion& lhs, const Quaternion& rhs);
+	
 	~Quaternion();
 
 
@@ -188,3 +231,28 @@ public:
 
 
 };
+
+
+class Transform {
+public :
+	Transform();
+	Transform(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+	~Transform();
+
+	Matrix4x4 GetLocalToWorldMatrix();
+	bool isDirty;
+	Vector3 position;
+	Quaternion rotation;
+	Vector3 scale;
+
+	void Translate(const Vector3& delta);
+	void Rotate(float xRot, float yRot, float zRot);
+	void Scale(const Vector3& scale);
+
+private:
+	Matrix4x4 localToWorldMatrix;
+	Matrix4x4 worldToLocalMatrix;
+
+};
+
+
