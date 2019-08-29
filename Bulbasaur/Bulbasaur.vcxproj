@@ -236,9 +236,6 @@
     <ClInclude Include="math.h" />
     <ClInclude Include="Mathf.h" />
     <ClInclude Include="MathUtility.h" />
-    <ClInclude Include="test_class.h" />
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="TypeDef.h" />
     <ClInclude Include="VSOutput.h" />
   </ItemGroup>
   <ItemGroup>
