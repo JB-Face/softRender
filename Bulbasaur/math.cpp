@@ -225,7 +225,6 @@ Quaternion::Quaternion(float _x, float _y, float _z, float _w)
 }
 Quaternion::Quaternion(float _yaw, float _pitch, float _roll)
 {
-	
 	this->setQuaternion(_yaw,_pitch,_roll);
 }
 Quaternion::~Quaternion()
@@ -251,7 +250,8 @@ void Quaternion::debug()
 	eulerAngles.debug();
 	std::cout << x << "," << y << "," << z << "," << w << std::endl;
 }
-void Quaternion::setQuaternion(float _yaw, float _pitch, float _rolll) {
+void Quaternion::setQuaternion(float _yaw, float _pitch, float _roll) {
+
 	float  angle;
 	float  sinRoll, sinPitch, sinYaw, cosRoll, cosPitch, cosYaw;
 
@@ -263,7 +263,7 @@ void Quaternion::setQuaternion(float _yaw, float _pitch, float _rolll) {
 	sinPitch = sin(angle);
 	cosPitch = cos(angle);
 
-	angle = _rolll * 0.5f;
+	angle = _roll * 0.5f;
 	sinRoll = sin(angle);
 	cosRoll = cos(angle);
 

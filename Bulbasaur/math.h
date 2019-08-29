@@ -174,8 +174,6 @@ public:
 
 	static Quaternion Euler(float x, float y, float z) {
 
-		
-
 		x *= Deg2Rad;
 		y *= Deg2Rad;
 		z *= Deg2Rad;

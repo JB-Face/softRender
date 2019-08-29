@@ -1,7 +1,6 @@
 #ifndef	MATHUTILITY_H
 #define MATHUTILITY_H
-
-#include <SDL.h>
+#include "SDL2/include/SDL.h"
 #include <math.h>
 #include <random>
 
