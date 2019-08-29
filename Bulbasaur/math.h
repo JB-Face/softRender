@@ -240,8 +240,13 @@ private:
 class Transform {
 public :
 	Transform();
-	Transform(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+	Transform(const Vector3& pos, const Quaternion& rot, const Vector3& sca);
+	
 	~Transform();
+
+	void Translate(const Vector3& delta);
+	void Rotate(float xRot, float yRot, float zRot);
+	void Scale(const Vector3& _scale);
 
 	Matrix4x4 GetLocalToWorldMatrix();
 	bool isDirty;
@@ -249,9 +254,7 @@ public :
 	Quaternion rotation;
 	Vector3 scale;
 
-	void Translate(const Vector3& delta);
-	void Rotate(float xRot, float yRot, float zRot);
-	void Scale(const Vector3& scale);
+
 
 private:
 	Matrix4x4 localToWorldMatrix;

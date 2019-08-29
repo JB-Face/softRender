@@ -41,17 +41,8 @@ int main(int argc, char* args[])
 	
 	//a.debug();
 
-	//Transform transform =Transform();
-	//Quaternion qtest = Quaternion();
-	//transform.position = Vector3(1, 2, 3);
-	//transform.rotation =qtest.Euler(30,45,60);
-	//transform.scale = Vector3(3, 2, 1);
+	Transform test;
 
-	//qtest.Euler(30, 45, 60).debug();
-
-	Quaternion b(M_PI * 0.5, 0, 0);
-	b.debug();
-	
 	return 0;
 
 }

@@ -207,6 +207,7 @@ Matrix4x4::~Matrix4x4()
 
 
 #include "Quaternion.h"
+#include "Transform.h"
 
 
 
@@ -221,7 +222,7 @@ Quaternion::Quaternion(float _x, float _y, float _z, float _w)
 	y = _y;
 	z = _z;
 	w = _w;
-	eulerAngles = Quaternion::EulerAngle();
+	//eulerAngles = Quaternion::EulerAngle();
 }
 Quaternion::Quaternion(float _yaw, float _pitch, float _roll)
 {
@@ -247,7 +248,6 @@ Matrix4x4 Quaternion::GetRotMatrix()
 }
 void Quaternion::debug()
 {
-	eulerAngles.debug();
 	std::cout << x << "," << y << "," << z << "," << w << std::endl;
 }
 void Quaternion::setQuaternion(float _yaw, float _pitch, float _roll) {
@@ -369,26 +369,75 @@ Vector3 operator*(double lhs, const Vector3& rhs)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+//void Transform::Translate(const Vector3& delta)
+//{
+//	position.x += delta.x;
+//	position.y += delta.y;
+//	position.z += delta.z;
+//	isDirty = true;
+//}
+//
+//void Transform::Rotate(float xRot, float yRot, float zRot)
+//{
+//	rotation = rotation * Quaternion::Euler(xRot, yRot, zRot);
+//	isDirty = true;
+//}
+//
+//void Transform::Scale(const Vector3& _scale)
+//{
+//	scale = _scale;
+//	isDirty = true;
+//}
+
 Transform::Transform()
 {
 }
 
-Transform::Transform(const Vector3& _position, const Quaternion& _rotation, const Vector3& _scale)
+Transform::Transform(const Vector3& pos, const Quaternion& rot, const Vector3& sca)
 {
-	position = _position;
-	rotation = _rotation;
-	scale = _scale;
-	isDirty = true;
 
+	position = pos;
+	rotation = rot;
+	scale = sca;
+	isDirty = true;
 }
 
 Transform::~Transform()
 {
 }
 
+void Transform::Translate(const Vector3& delta)
+{
+	
+		position.x += delta.x;
+		position.y += delta.y;
+		position.z += delta.z;
+		isDirty = true;
+	
+}
 
+void Transform::Rotate(float xRot, float yRot, float zRot)
+{
+	rotation = rotation * Quaternion::Euler(xRot, yRot, zRot);
+	isDirty = true;
+}
 
-
+void Transform::Scale(const Vector3& _scale)
+{
+	scale = _scale;
+	isDirty = true;
+}
 
 Matrix4x4 Transform::GetLocalToWorldMatrix()
 {
@@ -408,30 +457,10 @@ Matrix4x4 Transform::GetLocalToWorldMatrix()
 		localToWorldMatrix = localToWorldMatrix = transformMatrix * rotation.GetRotMatrix() * scaleMatrix;
 	}
 
-		
+
 
 	return localToWorldMatrix;
 
 
 
-}
-
-void Transform::Translate(const Vector3& delta)
-{
-	position.x += delta.x;
-	position.y += delta.y;
-	position.z += delta.z;
-	isDirty = true;
-}
-
-void Transform::Rotate(float xRot, float yRot, float zRot)
-{
-	rotation = rotation * Quaternion::Euler(xRot, yRot, zRot);
-	isDirty = true;
-}
-
-void Transform::Scale(const Vector3& _scale)
-{
-	scale = _scale;
-	isDirty = true;
 }
